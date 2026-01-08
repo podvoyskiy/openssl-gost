@@ -1,44 +1,42 @@
 #!/bin/bash
 
+DATA_DIR="/app/data"
+KEYS_DIR="/app/keys"
+
 case "$1" in
-    signing)
-        echo "Starting signing process..."
-        exec "/app/scripts/signing.sh"
-        ;;
-    encrypt)
-        echo "Starting encryption process..."
-        exec "/app/scripts/encrypt.sh"
-        ;;
-    decrypt)
-        echo "Starting decryption process..."
-        exec "/app/scripts/decrypt.sh"
+    sign|verify|encrypt|decrypt)
+        echo "Starting $1 process..."
+        exec "/app/scripts/$1.sh"
         ;;
     help)
         cat << EOF
 
 Available commands:
-  signing     - Sign all files in /app/data/ (excluding .enc and .sig files)
-  encrypt     - Encrypt all files in /app/data/ (excluding .enc files)
-  decrypt     - Decrypt all .enc files in /app/data/
+  sign        - Sign all files in $DATA_DIR/ (excluding .enc and .sig files)
+                Creates detached signatures with .sig extension
+  verify      - Verify detached signatures (.sig files) in $DATA_DIR/
+                Requires original files (without .sig extension)
+  encrypt     - Encrypt all files in $DATA_DIR/ (excluding .enc files)
+  decrypt     - Decrypt all .enc files in $DATA_DIR/
   help        - Show this help message
 
 Required volumes:
-  -v /path/to/keys:/app/keys:ro
-  -v /path/to/data:/app/data
+  -v /path/to/keys:$KEYS_DIR:ro
+  -v /path/to/data:$DATA_DIR
 
-Key files expected in /app/keys/:
+Key files expected in $KEYS_DIR/:
   - cert.pem
   - private.key
 
 Example:
-  docker run -v /path/to/keys:/app/keys:ro \\
-             -v /path/to/data:/app/data \\
-             --rm openssl-gost signing
+  docker run -v /path/to/keys:$KEYS_DIR:ro \\
+             -v /path/to/data:$DATA_DIR \\
+             --rm openssl-gost sign
 EOF
         ;;
     *)
         echo "Unknown command: $1"
-        echo "Available commands: signing, encrypt, decrypt, help"
+        echo "Available commands: sign, verify, encrypt, decrypt, help"
         exit 1
         ;;
 esac

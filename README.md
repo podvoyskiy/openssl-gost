@@ -20,7 +20,8 @@ docker build -t openssl-gost .
 
 | Command | Description |
 |-------------|-------------|
-| `signing`   | Sign all files in `/app/data/` (excluding `.enc` and `.sig` files) |
+| `sign`   | Sign all files in `/app/data/` (excluding `.enc` and `.sig` files) Creates detached signatures with `.sig` extension |
+| `verify` | Verify detached signatures (`.sig` files) in `/app/data/` Requires original files (without `.sig` extension) |
 | `encrypt` | Encrypt all files in `/app/data/` (excluding `.enc` files) |
 | `decrypt` | Decrypt all `.enc` files in `/app/data/` |
 | `help` | Show help message |

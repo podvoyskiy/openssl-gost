@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -euo pipefail
-
 CERT_FILE="/app/keys/cert.pem"
 KEY_FILE="/app/keys/private.key"
 DATA_DIR="/app/data/"
